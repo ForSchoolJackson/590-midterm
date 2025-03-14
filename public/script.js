@@ -94,6 +94,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         return txt.value;
     }
 
+    const API_URL = window.location.hostname.includes("localhost")
+        ? "http://localhost:3000/chatgpt"
+        : "https://https://jmh4687-trivia-game-b96b029779a3.herokuapp.com//chatgpt";
+
     async function fetchChatGPTResponse(query) {
         try {
             const response = await fetch('http://localhost:3000/chatgpt', {
