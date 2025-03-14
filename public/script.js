@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchChatGPTResponse(query) {
         try {
-            const response = await fetch('http://localhost:3000/chatgpt', {
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query })
