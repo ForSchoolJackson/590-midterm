@@ -11,8 +11,9 @@ app.use(express.static('public'));
 app.post('/chatgpt', async (req, res) => {
     const query = req.body.query;
     try {
-        const response = await axios.post('https://api.openai.com/v1/engines/gpt-4o-mini/completions', {
-            prompt: query,
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: query }],
             max_tokens: 150
         }, {
             headers: {
@@ -20,10 +21,11 @@ app.post('/chatgpt', async (req, res) => {
                 'Content-Type': 'application/json'
             }
         });
-        res.json(response.data.choices[0].text.trim());
+
+        res.json({ response: response.data.choices[0].message.content.trim() });
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching response from ChatGPT');
+        console.error(error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Error fetching response from ChatGPT' });
     }
 });
 

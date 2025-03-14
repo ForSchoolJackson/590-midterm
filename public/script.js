@@ -95,23 +95,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function fetchChatGPTResponse(query) {
-        const response = await fetch('http://localhost:3000/chatgpt', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query })
-        });
-        const data = await response.json();
-        const tokensUsed = data.usage.total_tokens;
-        totalTokensUsed += tokensUsed;
+        try {
+            const response = await fetch('http://localhost:3000/chatgpt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query })
+            });
 
-        if (totalTokensUsed > TOKEN_LIMIT) {
-            console.warn('Token limit exceeded!');
-            return 'Token limit exceeded. Please try again later.';
+            const data = await response.json();
+
+            if (data.error) {
+                console.error('Error:', data.error);
+                return 'Error fetching response.';
+            }
+
+            return data.response;
+        } catch (error) {
+            console.error('Fetch error:', error);
+            return 'Failed to connect to server.';
         }
-
-        return data;
     }
 
     sendButton.addEventListener('click', async () => {
