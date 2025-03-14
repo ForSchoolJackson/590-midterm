@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const answersElement = document.getElementById('answers');
     const nextButton = document.getElementById('next-button');
     const scoreContainer = document.getElementById('score-container');
+    const playAgainButton = document.getElementById('play-again-button');
     const scoreElement = document.getElementById('score');
     const backgroundMusic = document.getElementById('background-music');
     const userInput = document.getElementById('user-input');
@@ -15,8 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let score = 0;
     let questions = [];
     let sessionToken = '';
-    let totalTokensUsed = 0;
-    const TOKEN_LIMIT = 1000000;
 
     async function getSessionToken() {
         const response = await fetch('https://opentdb.com/api_token.php?command=request');
@@ -124,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const query = userInput.value;
         if (query) {
             const response = await fetchChatGPTResponse(query);
-            chatOutput.innerHTML += `<p><strong>You:</strong> ${query}</p><p><strong>ChatGPT:</strong> ${response}</p>`;
+            chatOutput.innerHTML += `<p><strong>You:</strong> ${query}</p><p><strong>Trivobot:</strong> ${response}</p>`;
             userInput.value = '';
         }
     });
@@ -137,6 +136,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         await getSessionToken();
         await fetchQuestions();
         showQuestion();
+    });
+
+    playAgainButton.addEventListener('click', () => {
+        location.reload();
     });
 
     await getSessionToken();

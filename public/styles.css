@@ -16,12 +16,12 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 200px;
     position: relative;
-    z-index: 1;
+    z-index: 1; 
 }
 
-#play-button {
+#play-button, #play-again-button {
     padding: 10px 20px;
     background-color: #ff69b4;
     color: #fff;
@@ -31,7 +31,7 @@ body {
     margin-bottom: 20px;
 }
 
-#play-button:hover {
+#play-button:hover, #play-again-button:hover {
     background-color: #ff1493;
 }
 
@@ -111,11 +111,12 @@ body {
 #chat-output {
     margin: 20px;
     text-align: left;
-    padding: 20px 20px;
+    padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
-    height: 10%;
+    height: 100px; /* Fixed height */
+    overflow-y: scroll; /* Enable vertical scrolling */
 }
 
 #robot-image {
