@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, orange, pink, blue);
+    margin: 0;
+}
+
+#app {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#play-button {
+    padding: 10px 20px;
+    background-color: #ff69b4; /* Pink background */
+    color: #fff; /* White text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#play-button:hover {
+    background-color: #ff1493; /* Darker pink on hover */
+}
+
+#question-container {
+    margin-bottom: 20px;
+}
+
+#answers button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#answers button:hover {
+    background-color: #0056b3;
+}
+
+#next-button {
+    display: none;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#next-button:hover {
+    background-color: #218838;
+}
+
+#score-container {
+    display: none;
+}
+
+#chat-container {
+    width: 80%;
+    max-width: 600px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#user-input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#send-button {
+    padding: 10px 20px;
+    background-color: #7a3fe9;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-button:hover {
+    background-color: #5419c1;
+}
+
+#chat-output {
+    margin: 20px;
+    text-align: left;
+    padding: 20px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    height: 10%;
+}

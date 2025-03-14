@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <h1>Trivia Game</h1>
+        <button id="play-button">Play Game</button>
+        <div id="question-container" style="display: none;">
+            <p id="question"></p>
+            <div id="answers"></div>
+        </div>
+        <button id="next-button" style="display: none;">Next Question</button>
+        <div id="score-container" style="display: none;">
+            <p id="score"></p>
+        </div>
+    </div>
+    <div id="chat-container">
+        <input type="text" id="user-input" placeholder="Ask Trivia Bot a question...">
+        <button id="send-button">Send</button>
+        <div id="chat-output"></div>
+    </div>
+    <audio id="background-music" loop>
+        <source src="media/Brain Buzz Groove.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <script src="script.js"></script>
+</body>
+
+</html>
