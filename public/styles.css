@@ -7,6 +7,7 @@ body {
     height: 100vh;
     background: linear-gradient(135deg, orange, pink, blue);
     margin: 0;
+    position: relative;
 }
 
 #app {
@@ -16,12 +17,14 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 #play-button {
     padding: 10px 20px;
-    background-color: #ff69b4; /* Pink background */
-    color: #fff; /* White text */
+    background-color: #ff69b4;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -29,7 +32,7 @@ body {
 }
 
 #play-button:hover {
-    background-color: #ff1493; /* Darker pink on hover */
+    background-color: #ff1493;
 }
 
 #question-container {
@@ -40,7 +43,7 @@ body {
     display: block;
     margin: 10px auto;
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #ff69b4;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -48,13 +51,13 @@ body {
 }
 
 #answers button:hover {
-    background-color: #0056b3;
+    background-color: #ff1493;
 }
 
 #next-button {
     display: none;
     padding: 10px 20px;
-    background-color: #28a745;
+    background-color: orange;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -62,7 +65,7 @@ body {
 }
 
 #next-button:hover {
-    background-color: #218838;
+    background-color: rgb(255, 119, 0);
 }
 
 #score-container {
@@ -77,6 +80,11 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    position: fixed;
+    bottom: 20px; /* Adjust this value to move it higher */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
 }
 
 #user-input {
@@ -108,4 +116,12 @@ body {
     border-radius: 5px;
     background-color: #f9f9f9;
     height: 10%;
+}
+
+#robot-image {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 500px; /* Adjust the size as needed */
+    z-index: 0;
 }
