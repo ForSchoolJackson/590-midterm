@@ -8,13 +8,28 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static('public'));
 
+// Allowed model
+const ALLOWED_MODEL = "gpt-4o-mini";
+
 app.post('/chatgpt', async (req, res) => {
     const query = req.body.query;
+    const requestedModel = req.body.model;
+
+    if (requestedModel && requestedModel !== ALLOWED_MODEL) {
+        return res.status(400).json({ error: `Only ${ALLOWED_MODEL} is allowed.` });
+    }
+
+    console.log(`Using model: ${ALLOWED_MODEL}`);
+
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: "gpt-4o-mini",
-            messages: [{ role: "user", content: query }],
-            max_tokens: 150
+            model: ALLOWED_MODEL,
+            messages: [
+                { role: "system", content: "Keep responses brief and concise, ideally under two sentences." },
+                { role: "user", content: query }
+            ],
+            max_tokens: 50,
+            temperature: 0.3
         }, {
             headers: {
                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
