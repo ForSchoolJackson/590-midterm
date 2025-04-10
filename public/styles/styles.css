@@ -1,0 +1,129 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, rgb(24, 210, 30), rgb(75, 186, 184), blue);
+    margin: 0;
+    padding: 0;
+}
+
+.main-title {
+    color: white;
+    font-size: 7vw;
+    margin-top: -20px;
+    margin-bottom: 0px;
+}
+
+.secondary-title {
+    color: white;
+    font-size: 2.6vw;
+    margin-top: -5px;
+}
+
+h1 {
+    color: white;
+    font-size: 2.6vw;
+    margin-bottom: 0px;
+}
+
+
+#logo {
+    width: 25vw;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+#start-button {
+    padding: 5px 20px;
+    font-size: 2vw;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+#start-button :hover {
+    background-color: #2f7f32;
+
+}
+
+#search {
+    width: 80%;
+    max-width: 600px;
+    padding: 10px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#country-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 70vh;
+    width: 100%;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    padding: 10px;
+}
+
+#country-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+
+.country {
+    margin: 10px;
+    padding: 10px;
+    background-color: #ffffffbd;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    width: 150px;
+    height: 120px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.country img {
+    width: auto;
+    height: 60px;
+    margin-bottom: 10px;
+    /* Ensures the flag is above the country name */
+}
+
+.country span {
+    display: block;
+    font-size: 16px;
+    color: #333;
+}
+
+.country:hover {
+    transform: scale(1.05);
+}
