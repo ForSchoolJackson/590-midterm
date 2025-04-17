@@ -115,7 +115,6 @@ h1 {
     width: auto;
     height: 60px;
     margin-bottom: 10px;
-    /* Ensures the flag is above the country name */
 }
 
 .country span {
@@ -126,4 +125,149 @@ h1 {
 
 .country:hover {
     transform: scale(1.05);
+}
+
+.country-section {
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.country-section h2 {
+    font-size: 1.4em;
+    margin-bottom: 5px;
+}
+
+#header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+}
+
+#back-button img {
+    width: 40px;
+    height: auto;
+}
+
+#country-name {
+    font-size: 4em;
+    margin-bottom: 20px;
+    margin-top: -10px;
+}
+
+#country-details {
+    color: white;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 1rem;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    text-align: left;
+    max-width: 1000px;
+}
+
+.country-section {
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.country-section h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.country-section .content-container {
+    display: flex;
+    flex-direction: row;
+    /* Layout image and text side by side */
+    align-items: flex-start;
+    /* Align both image and text at the top */
+    width: 100%;
+    /* Ensure the content container spans the full width */
+}
+
+.country-section p {
+    font-size: 1.2em;
+    color: white;
+    max-width: 100%;
+    /* Allow text to take up the full width if no image */
+    margin-right: 20px;
+    /* Space between text and image */
+}
+
+.country-section img.section-image {
+    width: 300px;
+    /* Fixed width */
+    height: auto;
+    /* Maintain aspect ratio */
+    margin-left: 20px;
+    /* Space between text and image */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* If there's no image, let the text take up the full width */
+.country-section.no-image .content-container {
+    flex-direction: column;
+    /* Stack text and image vertically if no image */
+}
+
+.country-section.no-image p {
+    max-width: 100%;
+}
+
+.section-image {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 12px;
+    margin: 15px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Custom scrollbar styling */
+#country-list-container::-webkit-scrollbar,
+#country-details::-webkit-scrollbar {
+    width: 10px;
+}
+
+#country-list-container::-webkit-scrollbar-track,
+#country-details::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+#country-list-container::-webkit-scrollbar-thumb,
+#country-details::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 5px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+#country-list-container::-webkit-scrollbar-thumb:hover,
+#country-details::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+/* Firefox scrollbar support */
+#country-list-container,
+#country-details {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.1);
 }
