@@ -22,12 +22,13 @@ app.post('/chatgpt', async (req, res) => {
     console.log(`Fetching ${type} info for ${country} using ${ALLOWED_MODEL}`);
 
     const prompts = {
-        overview: `Give a short, friendly overview of ${country}.`,
-        geography: `Describe the geography and climate of ${country} in 2 short sentences.`,
-        culture: `Summarize the culture and traditions of ${country} in 2 sentences.`,
-        economy: `Briefly describe the economy of ${country} in simple terms.`,
-        funfacts: `Give 2 fun or surprising facts about ${country}.`,
-        government: `What kind of government does ${country} have? Answer in 1-2 sentences.`,
+        overview: `Give a short, friendly overview of ${country}. Avoid starting the paragraph with the country's name.`,
+        geography: `Describe the geography and climate of ${country} in short sentences. Avoid starting the paragraph with the country's name.`,
+        culture: `Summarize the culture and traditions of ${country} in a few sentences. Avoid starting the paragraph with the country's name.`,
+        economy: `Briefly describe the economy of ${country} in simple terms. Avoid starting the paragraph with the country's name.`,
+        funfacts: `Give 2 fun or surprising facts about ${country}. Avoid starting the paragraph with the country's name.`,
+        government: `What kind of government does ${country} have? Answer in 1-2 sentences. Avoid starting the paragraph with the country's name.`,
+        language: `Briefly explain what language(s) are spoken in ${country}, and any interesting facts about the language(s). Answer in a few sentences. Avoid starting the paragraph with the country's name.`,
     };
 
     const query = prompts[type];
@@ -40,7 +41,7 @@ app.post('/chatgpt', async (req, res) => {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: ALLOWED_MODEL,
             messages: [
-                { role: "system", content: "Keep responses brief and concise." },
+                { role: "system", content: "Keep responses brief and concise. Avoid repeating the country name at the beginning of each response. Assume the user knows which country is being discussed." },
                 { role: "user", content: query }
             ],
             max_tokens: 100,
@@ -65,7 +66,7 @@ app.post('/generate-image', async (req, res) => {
 
     // Dynamically create a prompt based on country and type
     const imagePrompts = {
-        overview: `${country} country overview with beautiful landmarks and culture.`,
+        overview: `${country} country overview with beautiful landmarks and culture. Make it bright and colorful.`,
         geography: `Geography and climate of ${country} with mountains, rivers, and weather patterns.`,
         culture: `${country} culture and traditions with its people, clothing, and celebrations.`,
     };
@@ -77,7 +78,7 @@ app.post('/generate-image', async (req, res) => {
     }
 
     try {
-        const response = await axios.post('https://api.openai.com/v1/images/generations', {
+        const response = await axios.post('https://api.openai.com/v1/images/generationss', {
             model: "dall-e-2",
             prompt: prompt,
             n: 1,
@@ -105,7 +106,38 @@ app.post('/generate-image', async (req, res) => {
     }
 });
 
+//language example sentance
+app.post('/language-example', async (req, res) => {
+    const { country } = req.body;
 
+    const sentencePrompt = `Give one example sentence in the main language spoken in ${country}, along with its English translation. Format: "[Original] - [Translation]"`;
+
+    try {
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: ALLOWED_MODEL,
+            messages: [
+                { role: "system", content: "Provide only the sentence and its translation in the format: '[Original] - [Translation]'" },
+                { role: "user", content: sentencePrompt }
+            ],
+            max_tokens: 60,
+            temperature: 0.5
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const content = response.data.choices[0].message.content.trim();
+        res.json({ sentence: content });
+    } catch (error) {
+        console.error(error.response?.data || error.message);
+        res.status(500).json({ error: 'Error generating language example.' });
+    }
+});
+
+
+// find the port
 app.listen(port, () => {
     console.log(`✅ Server is running at http://localhost:${port}`);
 });
