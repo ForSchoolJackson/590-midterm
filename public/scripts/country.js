@@ -25,11 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const contentContainer = document.createElement('div');
         contentContainer.classList.add('content-container');
 
-        //different for language
         if (type === "language") {
             const langWrapper = document.createElement('div');
             langWrapper.style.display = 'flex';
-            langWrapper.style.flexDirection = 'column'; // Stack vertically
+            langWrapper.style.flexDirection = 'column';
 
             const langDetails = document.createElement('p');
             langDetails.textContent = 'Loading...';
@@ -44,84 +43,83 @@ document.addEventListener('DOMContentLoaded', () => {
             const audioWrapper = document.createElement('div');
             audioWrapper.style.marginTop = '0.5rem';
             audioWrapper.style.display = 'flex';
-            audioWrapper.style.flexDirection = 'column'; // Stack loading text + button vertically
+            audioWrapper.style.flexDirection = 'column';
             langWrapper.appendChild(audioWrapper);
 
             contentContainer.appendChild(langWrapper);
 
-            // description
+            // fetch language description
             fetch('/chatgpt', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ country: countryName, type: type, model: "gpt-4o-mini" })
             })
-                .then(res => res.json())
-                .then(data => {
-                    langDetails.textContent = data.response || "No response.";
-                })
-                .catch(err => {
-                    console.error("Error loading language info:", err);
-                    langDetails.textContent = "Error loading language info.";
-                });
+            .then(res => res.json())
+            .then(data => {
+                langDetails.textContent = data.response || "No response.";
+            })
+            .catch(err => {
+                console.error("Error loading language info:", err);
+                langDetails.textContent = "Error loading language info.";
+            });
 
-            // example sentence
+            // fetch example sentence + audio
             fetch('/language-example', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ country: countryName })
             })
-                .then(res => res.json())
-                .then(data => {
-                    sentenceElement.textContent = data.sentence || "No sentence provided.";
+            .then(res => res.json())
+            .then(data => {
+                sentenceElement.textContent = data.sentence || "No sentence provided.";
 
-                    audioWrapper.innerHTML = ''; // clear previous loading text/buttons if any
+                audioWrapper.innerHTML = '';
 
-                    if (data.audio) {
-                        const audio = new Audio(data.audio);
+                if (data.audio) {
+                    const audio = new Audio(data.audio);
 
-                        // --- CREATE loading text first ---
-                        const loadingText = document.createElement('p');
-                        loadingText.textContent = "🔄 Loading audio...";
-                        loadingText.style.fontSize = '0.9rem';
-                        loadingText.style.color = 'gray';
-                        loadingText.style.marginBottom = '0.5rem';
-                        audioWrapper.appendChild(loadingText);
+                    const loadingText = document.createElement('p');
+                    loadingText.textContent = "🔄 Loading audio...";
+                    loadingText.style.fontSize = '0.9rem';
+                    loadingText.style.color = 'gray';
+                    loadingText.style.marginBottom = '0.5rem';
+                    audioWrapper.appendChild(loadingText);
 
-                        // --- Create Play Button ---
-                        const playButton = document.createElement('button');
-                        playButton.textContent = "Play Example";
-                        playButton.classList.add('play-audio-button');
-                        playButton.disabled = true; // Disable until audio ready
-                        audioWrapper.appendChild(playButton);
+                    const playButton = document.createElement('button');
+                    playButton.textContent = "Play Example";
+                    playButton.classList.add('play-audio-button');
+                    playButton.disabled = true;
+                    audioWrapper.appendChild(playButton);
 
-                        playButton.addEventListener('click', () => {
-                            audio.currentTime = 0; // Restart audio
-                            audio.play();
-                        });
+                    playButton.addEventListener('click', () => {
+                        audio.currentTime = 0;
+                        audio.play();
+                    });
 
-                        audio.addEventListener('canplaythrough', () => {
-                            loadingText.remove(); // Now it can remove it because it exists
-                            playButton.disabled = false;
-                        });
+                    audio.addEventListener('canplaythrough', () => {
+                        loadingText.remove();
+                        playButton.disabled = false;
+                    });
 
-                        audio.addEventListener('error', () => {
-                            loadingText.textContent = "❌ Failed to load audio.";
-                            playButton.disabled = true;
-                        });
+                    audio.addEventListener('error', () => {
+                        loadingText.textContent = "❌ Failed to load audio.";
+                        playButton.disabled = true;
+                    });
 
-                    } else {
-                        const noAudioText = document.createElement('p');
-                        noAudioText.textContent = "❌ No audio available.";
-                        noAudioText.style.color = 'red';
-                        audioWrapper.appendChild(noAudioText);
-                    }
-                })
-                .catch(err => {
-                    console.error("Error fetching language example:", err);
-                    sentenceElement.textContent = "Error loading example sentence.";
-                });
+                } else {
+                    const noAudioText = document.createElement('p');
+                    noAudioText.textContent = "❌ No audio available.";
+                    noAudioText.style.color = 'red';
+                    audioWrapper.appendChild(noAudioText);
+                }
+            })
+            .catch(err => {
+                console.error("Error fetching language example:", err);
+                sentenceElement.textContent = "Error loading example sentence.";
+            });
 
         } else {
+            // regular sections
             const content = document.createElement('p');
             content.textContent = 'Loading...';
             content.id = `section-${type}`;
@@ -133,22 +131,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ country: countryName, type: type })
                 })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.imageUrl) {
-                            const image = document.createElement('img');
-                            image.alt = `${label} of ${countryName}`;
-                            image.classList.add('section-image');
-                            image.src = data.imageUrl;
-                            contentContainer.appendChild(image);
-                        } else {
-                            section.classList.add('no-image');
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Error generating image:', err);
+                .then(res => res.json())
+                .then(data => {
+                    if (data.imageUrl) {
+                        const image = document.createElement('img');
+                        image.alt = `${label} of ${countryName}`;
+                        image.classList.add('section-image');
+                        image.src = data.imageUrl;
+                        contentContainer.appendChild(image);
+                    } else {
                         section.classList.add('no-image');
-                    });
+                    }
+                })
+                .catch(err => {
+                    console.error('Error generating image:', err);
+                    section.classList.add('no-image');
+                });
             }
 
             fetch('/chatgpt', {
@@ -156,19 +154,76 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ country: countryName, type: type, model: "gpt-4o-mini" })
             })
-                .then(res => res.json())
-                .then(data => {
-                    content.textContent = data.response || "No response received.";
-                })
-                .catch(err => {
-                    console.error(`Error fetching ${type}:`, err);
-                    content.textContent = "Error loading content.";
-                });
+            .then(res => res.json())
+            .then(data => {
+                content.textContent = data.response || "No response received.";
+            })
+            .catch(err => {
+                console.error(`Error fetching ${type}:`, err);
+                content.textContent = "Error loading content.";
+            });
         }
 
         section.appendChild(header);
         section.appendChild(contentContainer);
         detailsContainer.appendChild(section);
+    });
+
+    // AFTER all the sections, add the "Ask a Question" section
+    const askSection = document.createElement('section');
+    askSection.id = 'ask-question-section';
+    askSection.classList.add('country-section', 'no-image');
+
+    const askHeader = document.createElement('h2');
+    askHeader.textContent = 'Ask a Question';
+    askSection.appendChild(askHeader);
+
+    const askContentContainer = document.createElement('div'); // new name!
+    askContentContainer.classList.add('content-container');
+
+    const askQuestionContainer = document.createElement('div');
+    askQuestionContainer.classList.add('ask-question-container');
+
+    const userQuestion = document.createElement('textarea');
+    userQuestion.id = 'user-question';
+    userQuestion.placeholder = 'Type your question about the country...';
+    askQuestionContainer.appendChild(userQuestion);
+
+    const askButton = document.createElement('button');
+    askButton.id = 'ask-button';
+    askButton.textContent = 'Ask';
+    askQuestionContainer.appendChild(askButton);
+
+    const questionResponse = document.createElement('div');
+    questionResponse.id = 'question-response';
+    askQuestionContainer.appendChild(questionResponse);
+
+    askContentContainer.appendChild(askQuestionContainer);
+    askSection.appendChild(askContentContainer);
+    detailsContainer.appendChild(askSection);
+
+    askButton.addEventListener('click', async () => {
+        const question = userQuestion.value.trim();
+        if (!question) {
+            questionResponse.textContent = "Please type a question!";
+            return;
+        }
+
+        questionResponse.textContent = "Thinking... 🤔";
+
+        try {
+            const res = await fetch('/ask-question', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ country: countryName, question })
+            });
+
+            const data = await res.json();
+            questionResponse.textContent = data.response || "Sorry, no answer found.";
+        } catch (error) {
+            console.error(error);
+            questionResponse.textContent = "An error occurred.";
+        }
     });
 
     document.getElementById('back-button').addEventListener('click', () => {

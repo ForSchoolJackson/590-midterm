@@ -163,6 +163,40 @@ app.post('/language-example', async (req, res) => {
     }
 });
 
+// User custom questions about the country
+app.post('/ask-question', async (req, res) => {
+    const { country, question } = req.body;
+
+    if (!question || !country) {
+        return res.status(400).json({ error: "Country and question are required." });
+    }
+
+    const prompt = `The user is asking about ${country}. Here is the question: "${question}". Answer concisely and in friendly, easy-to-understand English. But only answer questions relating to the country ${country}. If the user asks an unrealted question, try to stear them back to asking about ${country}.`;
+
+    try {
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: ALLOWED_MODEL,
+            messages: [
+                { role: "system", content: "You are an expert about countries. Answer briefly and clearly." },
+                { role: "user", content: prompt }
+            ],
+            max_tokens: 150,
+            temperature: 0.7
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        res.json({ response: response.data.choices[0].message.content.trim() });
+
+    } catch (error) {
+        console.error(error.response?.data || error.message);
+        res.status(500).json({ error: 'Error fetching custom question response.' });
+    }
+});
+
 
 // find the port
 app.listen(port, () => {
