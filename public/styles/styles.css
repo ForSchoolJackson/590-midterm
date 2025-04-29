@@ -272,3 +272,32 @@ h1 {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.1);
 }
+
+
+/* Play audio button */
+.play-audio-button {
+    background-color: #28a745; /* Green */
+    color: white;
+    padding: 6px 12px; /* Smaller padding */
+    font-size: 0.9rem; /* Slightly smaller text */
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+    margin-left: 0; /* Align to left */
+    display: block; /* Make sure it doesn't float */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s, transform 0.2s;
+    width: fit-content; /* So it doesn't stretch */
+}
+
+.play-audio-button:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: scale(1.03);
+}
+
+.play-audio-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

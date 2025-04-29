@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (type === "language") {
             const langWrapper = document.createElement('div');
             langWrapper.style.display = 'flex';
-            langWrapper.style.flexDirection = 'column';
+            langWrapper.style.flexDirection = 'column'; // Stack vertically
 
             const langDetails = document.createElement('p');
             langDetails.textContent = 'Loading...';
@@ -41,9 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
             sentenceElement.style.marginTop = '0.5rem';
             langWrapper.appendChild(sentenceElement);
 
+            const audioWrapper = document.createElement('div');
+            audioWrapper.style.marginTop = '0.5rem';
+            audioWrapper.style.display = 'flex';
+            audioWrapper.style.flexDirection = 'column'; // Stack loading text + button vertically
+            langWrapper.appendChild(audioWrapper);
+
             contentContainer.appendChild(langWrapper);
 
-            //description
+            // description
             fetch('/chatgpt', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -58,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     langDetails.textContent = "Error loading language info.";
                 });
 
-            //example sentence
+            // example sentence
             fetch('/language-example', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -67,18 +73,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(res => res.json())
                 .then(data => {
                     sentenceElement.textContent = data.sentence || "No sentence provided.";
+
+                    audioWrapper.innerHTML = ''; // clear previous loading text/buttons if any
+
+                    if (data.audio) {
+                        const audio = new Audio(data.audio);
+
+                        // --- CREATE loading text first ---
+                        const loadingText = document.createElement('p');
+                        loadingText.textContent = "🔄 Loading audio...";
+                        loadingText.style.fontSize = '0.9rem';
+                        loadingText.style.color = 'gray';
+                        loadingText.style.marginBottom = '0.5rem';
+                        audioWrapper.appendChild(loadingText);
+
+                        // --- Create Play Button ---
+                        const playButton = document.createElement('button');
+                        playButton.textContent = "Play Example";
+                        playButton.classList.add('play-audio-button');
+                        playButton.disabled = true; // Disable until audio ready
+                        audioWrapper.appendChild(playButton);
+
+                        playButton.addEventListener('click', () => {
+                            audio.currentTime = 0; // Restart audio
+                            audio.play();
+                        });
+
+                        audio.addEventListener('canplaythrough', () => {
+                            loadingText.remove(); // Now it can remove it because it exists
+                            playButton.disabled = false;
+                        });
+
+                        audio.addEventListener('error', () => {
+                            loadingText.textContent = "❌ Failed to load audio.";
+                            playButton.disabled = true;
+                        });
+
+                    } else {
+                        const noAudioText = document.createElement('p');
+                        noAudioText.textContent = "❌ No audio available.";
+                        noAudioText.style.color = 'red';
+                        audioWrapper.appendChild(noAudioText);
+                    }
                 })
                 .catch(err => {
                     console.error("Error fetching language example:", err);
                     sentenceElement.textContent = "Error loading example sentence.";
                 });
+
         } else {
             const content = document.createElement('p');
             content.textContent = 'Loading...';
             content.id = `section-${type}`;
             contentContainer.appendChild(content);
 
-            if (type === "overview") {
+            if (type === "overview" || type === "geography" || type === "culture") {
                 fetch('/generate-image', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

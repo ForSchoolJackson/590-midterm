@@ -66,9 +66,9 @@ app.post('/generate-image', async (req, res) => {
 
     // Dynamically create a prompt based on country and type
     const imagePrompts = {
-        overview: `${country} country overview with beautiful landmarks and culture. Make it bright and colorful.`,
-        geography: `Geography and climate of ${country} with mountains, rivers, and weather patterns.`,
-        culture: `${country} culture and traditions with its people, clothing, and celebrations.`,
+        overview: `Show a photo of ${country} with beautiful landmarks. Make it bright and colorful. Just images.`,
+        geography: `Show a photo of the landscape of the wilderness in ${country}. Make it bright and colorful.`,
+        culture: `Show a photo of ${country}'s culture and traditions with its people and celebrations. Make it bright and colorful.`,
     };
 
     const prompt = imagePrompts[type];
@@ -78,7 +78,7 @@ app.post('/generate-image', async (req, res) => {
     }
 
     try {
-        const response = await axios.post('https://api.openai.com/v1/images/generationss', {
+        const response = await axios.post('https://api.openai.com/v1/images/generations', {
             model: "dall-e-2",
             prompt: prompt,
             n: 1,
@@ -110,13 +110,13 @@ app.post('/generate-image', async (req, res) => {
 app.post('/language-example', async (req, res) => {
     const { country } = req.body;
 
-    const sentencePrompt = `Give one example sentence in the main language spoken in ${country}, along with its English translation. Format: "[Original] - [Translation]"`;
+    const sentencePrompt = `Give one example sentence in the main language spoken in ${country}, along with its English translation. Format: "Language: Translation (Original)"`;
 
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: ALLOWED_MODEL,
             messages: [
-                { role: "system", content: "Provide only the sentence and its translation in the format: '[Original] - [Translation]'" },
+                { role: "system", content: "Provide only the sentence and its translation in the format:  'Language: Translation (Original)'" },
                 { role: "user", content: sentencePrompt }
             ],
             max_tokens: 60,
@@ -125,14 +125,41 @@ app.post('/language-example', async (req, res) => {
             headers: {
                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
                 'Content-Type': 'application/json'
-            }
+            },
         });
 
-        const content = response.data.choices[0].message.content.trim();
-        res.json({ sentence: content });
+        let content = response.data.choices[0].message.content.trim();
+
+        // Remove "Language: " from the beginning
+        if (content.startsWith('Language:')) {
+            content = content.replace(/^Language:\s*/, '');
+        }
+
+        // Generate TTS for the "original" sentence
+        const ttsResponse = await axios.post('https://api.openai.com/v1/audio/speech', {
+            model: "tts-1", // OpenAI's TTS model
+            input: content,
+            voice: "nova",  // Good general voice, you can customize
+            response_format: "mp3"
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            responseType: 'arraybuffer'  // Very important for audio!
+        });
+
+        // Encode the audio to Base64 so the frontend can play it easily
+        const audioBase64 = Buffer.from(ttsResponse.data, 'binary').toString('base64');
+
+        res.json({
+            sentence: content,
+            audio: `data:audio/mpeg;base64,${audioBase64}`
+        });
+
     } catch (error) {
         console.error(error.response?.data || error.message);
-        res.status(500).json({ error: 'Error generating language example.' });
+        res.status(500).json({ error: 'Error generating language example with speech.' });
     }
 });
 
